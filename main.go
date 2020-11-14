@@ -12,5 +12,5 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	grid := core.NewGrid(6, 6)
 	generators.SideWinder(grid)
-	terminal.TextDisplay(grid)
+	display.TextDisplay(grid)
 }
