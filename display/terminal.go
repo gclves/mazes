@@ -14,11 +14,12 @@ func MakeTerminalDisplay(writer io.Writer) TerminalDisplayer {
 	return TerminalDisplayer{writer}
 }
 
-func (d TerminalDisplayer) Display(g core.Grid) {
+func (d TerminalDisplayer) Display(g core.Grid) error {
 	d.printUpperLine(g)
 	d.printRows(g)
 	d.printBottomLine(g)
 	fmt.Fprintln(d.writer)
+	return nil
 }
 
 func (d TerminalDisplayer) printUpperLine(g core.Grid) {
