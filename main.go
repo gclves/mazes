@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"io"
 	"log"
 	"math/rand"
@@ -11,18 +12,18 @@ import (
 	"time"
 )
 
-const printPNG = false
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	grid := core.NewGrid(6, 6)
 	generators.SideWinder(grid)
 
-	targetFile := "-"
+	targetFilePtr := flag.String("out", "-", "file to write to")
+	writeToPNGPtr := flag.Bool("png", false, "whether to write an image")
+	flag.Parse()
 
 	var displayer display.Displayer
-	if printPNG {
-		displayer = WriteToImage(targetFile)
+	if *writeToPNGPtr {
+		displayer = WriteToImage(*targetFilePtr)
 	} else {
 		displayer = display.MakeTerminalDisplay(os.Stdout)
 	}
