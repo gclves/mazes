@@ -33,7 +33,7 @@ func main() {
 	if *writeToPNGPtr {
 		displayer = display.MakePNGDisplayer(out, 64, 5)
 	} else {
-		displayer = display.MakeTerminalDisplay(out)
+		displayer = display.MakeTextDisplayer(out)
 	}
 	displayer.Display(grid)
 }

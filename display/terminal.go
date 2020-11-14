@@ -6,15 +6,15 @@ import (
 	"mazes/core"
 )
 
-type TerminalDisplayer struct {
+type TextDisplayer struct {
 	writer io.Writer
 }
 
-func MakeTerminalDisplay(writer io.Writer) TerminalDisplayer {
-	return TerminalDisplayer{writer}
+func MakeTextDisplayer(writer io.Writer) TextDisplayer {
+	return TextDisplayer{writer}
 }
 
-func (d TerminalDisplayer) Display(g core.Grid) error {
+func (d TextDisplayer) Display(g core.Grid) error {
 	d.printUpperLine(g)
 	d.printRows(g)
 	d.printBottomLine(g)
@@ -22,7 +22,7 @@ func (d TerminalDisplayer) Display(g core.Grid) error {
 	return nil
 }
 
-func (d TerminalDisplayer) printUpperLine(g core.Grid) {
+func (d TextDisplayer) printUpperLine(g core.Grid) {
 	columns := ""
 	for i := 0; i < g.Columns-1; i++ {
 		columns += "───┬"
@@ -30,7 +30,7 @@ func (d TerminalDisplayer) printUpperLine(g core.Grid) {
 	fmt.Fprintf(d.writer, "┌%s───┐\n", columns)
 }
 
-func (d TerminalDisplayer) printRows(g core.Grid) {
+func (d TextDisplayer) printRows(g core.Grid) {
 	g.EachRow(func(cells []*core.Cell, _ int) {
 		fmt.Fprint(d.writer, "│")
 		bottomRow := "├"
@@ -63,7 +63,7 @@ func (d TerminalDisplayer) printRows(g core.Grid) {
 	})
 }
 
-func (d TerminalDisplayer) printBottomLine(g core.Grid) {
+func (d TextDisplayer) printBottomLine(g core.Grid) {
 	fmt.Fprint(d.writer, "└")
 	for i := 0; i < g.Columns-1; i++ {
 		fmt.Fprint(d.writer, "───┴")
