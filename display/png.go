@@ -9,21 +9,21 @@ import (
 	"mazes/core"
 )
 
-type PNGCreator struct {
+type PNGDisplayer struct {
 	writer        io.Writer
 	cellSize      int
 	wallThickness int
 }
 
-func MakePNGCreator(writer io.Writer, cellSize, wallThickness int) PNGCreator {
-	return PNGCreator{writer, cellSize, wallThickness}
+func MakePNGDisplayer(writer io.Writer, cellSize, wallThickness int) PNGDisplayer {
+	return PNGDisplayer{writer, cellSize, wallThickness}
 }
 
-func (c PNGCreator) Display(g core.Grid) error {
+func (c PNGDisplayer) Display(g core.Grid) error {
 	return png.Encode(c.writer, c.makeImage(g))
 }
 
-func (c PNGCreator) makeImage(g core.Grid) *image.RGBA {
+func (c PNGDisplayer) makeImage(g core.Grid) *image.RGBA {
 	width := g.Columns*c.cellSize + (1 * c.wallThickness)
 	height := g.Rows*c.cellSize + (1 * c.wallThickness)
 

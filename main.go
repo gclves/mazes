@@ -31,7 +31,7 @@ func main() {
 	out := openTargetFile(targetFile)
 	var displayer display.Displayer
 	if *writeToPNGPtr {
-		displayer = display.MakePNGCreator(out, 64, 5)
+		displayer = display.MakePNGDisplayer(out, 64, 5)
 	} else {
 		displayer = display.MakeTerminalDisplay(out)
 	}
