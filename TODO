@@ -1,0 +1,7 @@
+- [ ] More command-line arguments
+				- [ ] Algorithm picker
+				- [ ] Grid dimensions
+				- [ ] Random seed
+				- [ ] Colors?
+- [ ] Worry about close()'ing the file
+
