@@ -17,30 +17,34 @@ func main() {
 	grid := core.NewGrid(6, 6)
 	generators.SideWinder(grid)
 
-	targetFilePtr := flag.String("out", "-", "file to write to")
 	writeToPNGPtr := flag.Bool("png", false, "whether to write an image")
 	flag.Parse()
 
+	positionalArgs := flag.Args()
+	if len(positionalArgs) != 1 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	// XXX what about .close()?
+	targetFile := positionalArgs[0]
+	out := openTargetFile(targetFile)
 	var displayer display.Displayer
 	if *writeToPNGPtr {
-		displayer = WriteToImage(*targetFilePtr)
+		displayer = display.MakePNGCreator(out, 64, 5)
 	} else {
-		displayer = display.MakeTerminalDisplay(os.Stdout)
+		displayer = display.MakeTerminalDisplay(out)
 	}
 	displayer.Display(grid)
 }
 
-func WriteToImage(targetFile string) display.Displayer {
-	var out io.Writer
+func openTargetFile(targetFile string) io.Writer {
 	if targetFile == "-" {
-		out = os.Stdout
-	} else {
-		f, err := os.Create(targetFile)
-		if err != nil {
-			log.Fatalf("Failed to open %q for writing: %v", targetFile, err)
-		}
-		out = f
+		return os.Stdout
 	}
-
-	return display.MakePNGCreator(out, 64, 5)
+	f, err := os.Create(targetFile)
+	if err != nil {
+		log.Fatalf("Failed to open %q for writing: %v", targetFile, err)
+	}
+	return f
 }
