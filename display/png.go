@@ -5,33 +5,22 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
-	"log"
+	"io"
 	"mazes/core"
-	"os"
 )
 
 type PNGCreator struct {
-	fileName string
-	cellSize int
+	writer        io.Writer
+	cellSize      int
 	wallThickness int
 }
 
-func MakePNGCreator(fileName string, cellSize, wallThickness int) PNGCreator {
-	return PNGCreator{fileName, cellSize, wallThickness}
+func MakePNGCreator(writer io.Writer, cellSize, wallThickness int) PNGCreator {
+	return PNGCreator{writer, cellSize, wallThickness}
 }
 
-func (c PNGCreator) Display(g core.Grid) {
-	img := c.makeImage(g)
-	f, err := os.Create(c.fileName)
-	defer f.Close()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := png.Encode(f, img); err != nil {
-		log.Fatal(err)
-	}
+func (c PNGCreator) Display(g core.Grid) error {
+	return png.Encode(c.writer, c.makeImage(g))
 }
 
 func (c PNGCreator) makeImage(g core.Grid) *image.RGBA {
