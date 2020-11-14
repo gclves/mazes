@@ -10,15 +10,14 @@ import (
 	"os"
 )
 
-const wallThickness = 5
-
 type PNGCreator struct {
 	fileName string
 	cellSize int
+	wallThickness int
 }
 
-func MakePNGCreator(fileName string, cellSize int) PNGCreator {
-	return PNGCreator{fileName, cellSize}
+func MakePNGCreator(fileName string, cellSize, wallThickness int) PNGCreator {
+	return PNGCreator{fileName, cellSize, wallThickness}
 }
 
 func (c PNGCreator) Display(g core.Grid) {
@@ -36,8 +35,8 @@ func (c PNGCreator) Display(g core.Grid) {
 }
 
 func (c PNGCreator) makeImage(g core.Grid) *image.RGBA {
-	width := g.Columns*c.cellSize + (1 * wallThickness)
-	height := g.Rows*c.cellSize + (1 * wallThickness)
+	width := g.Columns*c.cellSize + (1 * c.wallThickness)
+	height := g.Rows*c.cellSize + (1 * c.wallThickness)
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	bg := color.RGBA{255, 255, 255, 255}
@@ -48,30 +47,30 @@ func (c PNGCreator) makeImage(g core.Grid) *image.RGBA {
 			x1 := col * c.cellSize
 			y1 := 0
 			x2 := (col + 1) * c.cellSize
-			y2 := wallThickness
+			y2 := c.wallThickness
 			drawLine(img, x1, y1, x2, y2)
 		}
 
 		if col == 0 {
 			x1 := 0
 			y1 := row * c.cellSize
-			x2 := wallThickness
-			y2 := (row+1)*c.cellSize + wallThickness
+			x2 := c.wallThickness
+			y2 := (row+1)*c.cellSize + c.wallThickness
 			drawLine(img, x1, y1, x2, y2)
 		}
 
 		if cell.South == nil || !cell.IsLinked(*cell.South) {
 			x1 := col * c.cellSize
 			y1 := (row + 1) * c.cellSize
-			x2 := (col+1)*c.cellSize + wallThickness
-			y2 := (row+1)*c.cellSize + wallThickness
+			x2 := (col+1)*c.cellSize + c.wallThickness
+			y2 := (row+1)*c.cellSize + c.wallThickness
 			drawLine(img, x1, y1, x2, y2)
 		}
 
 		if cell.East == nil || !cell.IsLinked(*cell.East) {
 			x1 := (col + 1) * c.cellSize
 			y1 := row * c.cellSize
-			x2 := (col+1)*c.cellSize + wallThickness
+			x2 := (col+1)*c.cellSize + c.wallThickness
 			y2 := (row + 1) * c.cellSize
 			drawLine(img, x1, y1, x2, y2)
 		}
