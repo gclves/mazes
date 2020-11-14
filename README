@@ -1,5 +1,6 @@
-# Mazes
+Maze generator
+==============
 
-Just working through [Mazes for Programmers](http://mazesforprogrammers.com),
+Just working through Mazes for Programmers (http://mazesforprogrammers.com),
 implementing the solutions in Go.
 
