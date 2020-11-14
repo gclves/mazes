@@ -12,5 +12,7 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	grid := core.NewGrid(6, 6)
 	generators.SideWinder(grid)
-	display.TextDisplay(grid)
+	displayer := display.MakePNGCreator("maze.png", 64)
+	// displayer := display.MakeTerminalDisplay()
+	displayer.Display(grid)
 }

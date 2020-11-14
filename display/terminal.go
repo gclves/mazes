@@ -5,7 +5,15 @@ import (
 	"mazes/core"
 )
 
-func TextDisplay(g core.Grid) {
+type TerminalDisplayer struct {
+
+}
+
+func MakeTerminalDisplay() TerminalDisplayer {
+	return TerminalDisplayer{}
+}
+
+func (d TerminalDisplayer) Display(g core.Grid) {
 	printUpperLine(g)
 	printRows(g)
 	printBottomLine(g)
