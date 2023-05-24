@@ -6,45 +6,68 @@ import (
 	"log"
 	"math/rand"
 	"mazes/core"
-	"mazes/display"
 	"mazes/generators"
+	"mazes/presenters"
 	"os"
 	"time"
 )
 
+type CLIArgs struct {
+	TargetFile string
+	WriteToPNG bool
+	GridSize   int
+}
+
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	grid := core.NewGrid(6, 6)
+
+	args := parseArgs()
+
+	grid := core.NewGrid(args.GridSize, args.GridSize)
 	generators.SideWinder(grid)
 
-	writeToPNGPtr := flag.Bool("png", false, "whether to write an image")
+	// XXX what about .close()?
+	out := openTargetFile(args.TargetFile)
+	presenter := getPresenter(args, out)
+	presenter.Display(grid)
+}
+
+func getPresenter(args CLIArgs, out io.Writer) presenters.Presenter {
+	if args.WriteToPNG {
+		return presenters.MakePNGDisplayer(out, 64, 5)
+	} else {
+		return presenters.MakeTextDisplayer(out)
+	}
+}
+
+func parseArgs() CLIArgs {
+	var args CLIArgs
+	flag.BoolVar(&args.WriteToPNG, "png", false, "whether to write an image")
+	// XXX: this must be positive
+	flag.IntVar(&args.GridSize, "grid-size", 6, "the size of the grid")
 	flag.Parse()
 
 	positionalArgs := flag.Args()
-	if len(positionalArgs) != 1 {
+	if len(positionalArgs) == 1 {
+		args.TargetFile = positionalArgs[0]
+	} else if len(positionalArgs) == 0 {
+		args.TargetFile = "-"
+	} else {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	// XXX what about .close()?
-	targetFile := positionalArgs[0]
-	out := openTargetFile(targetFile)
-	var displayer display.Displayer
-	if *writeToPNGPtr {
-		displayer = display.MakePNGDisplayer(out, 64, 5)
-	} else {
-		displayer = display.MakeTextDisplayer(out)
-	}
-	displayer.Display(grid)
+	return args
 }
 
-func openTargetFile(targetFile string) io.Writer {
-	if targetFile == "-" {
+// maybe this should return an error
+func openTargetFile(path string) io.Writer {
+	if path == "-" {
 		return os.Stdout
 	}
-	f, err := os.Create(targetFile)
+	f, err := os.Create(path)
 	if err != nil {
-		log.Fatalf("Failed to open %q for writing: %v", targetFile, err)
+		log.Fatalf("Failed to open %q for writing: %v", path, err)
 	}
 	return f
 }

@@ -1,8 +1,7 @@
-package display
+package presenters
 
 import "mazes/core"
 
-type Displayer interface {
+type Presenter interface {
 	Display(g core.Grid) error
 }
-

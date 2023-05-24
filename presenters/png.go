@@ -1,4 +1,4 @@
-package display
+package presenters
 
 import (
 	"image"
